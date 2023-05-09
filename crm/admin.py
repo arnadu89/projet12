@@ -26,6 +26,24 @@ class ContractAdmin(admin.ModelAdmin):
         return f"{obj.client} from {obj.client.company_name}"
 
 
+class EventAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "client",
+        "event_date",
+        "event_status",
+        "support_contact",
+    ]
+
+
+class EventStatusAdmin(admin.ModelAdmin):
+    list_display = [
+        "name"
+    ]
+
+
 admin.site.register(User, DjangoUserAdmin)
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Contract, ContractAdmin)
+admin.site.register(Event, EventAdmin)
+admin.site.register(EventStatus, EventStatusAdmin)

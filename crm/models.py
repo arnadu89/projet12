@@ -47,6 +47,9 @@ class Contract(models.Model):
 class EventStatus(models.Model):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Event(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -56,4 +59,4 @@ class Event(models.Model):
     event_status = models.ForeignKey(EventStatus, null=True, on_delete=models.SET_NULL)
     attendees = models.IntegerField()
     event_date = models.DateTimeField()
-    notes = models.TextField()
+    notes = models.TextField(null=True)
