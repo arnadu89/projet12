@@ -1,17 +1,49 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from crm.models import *
+from django.utils.translation import gettext_lazy as _
 
 
 class UserAdmin(DjangoUserAdmin):
-    fieldsets = [
-        "username", "first_name", "last_name", "email_address",
-        "active", "staff_status"
-    ]
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "team",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                ),
+            },
+        ),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "username",
+                    "password1",
+                    "password2",
+                    "email",
+                    "team",
+                ),
+            },
+        ),
+    )
 
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ["complete_name", "company_name", "sales_contact"]
+    list_display = [
+        "id",
+        "complete_name",
+        "company_name",
+        "sales_contact",
+    ]
 
 
 class ContractAdmin(admin.ModelAdmin):
@@ -42,7 +74,7 @@ class EventStatusAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(User, DjangoUserAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Contract, ContractAdmin)
 admin.site.register(Event, EventAdmin)

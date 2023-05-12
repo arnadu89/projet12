@@ -43,6 +43,9 @@ class Contract(models.Model):
     amount = models.FloatField()
     payment_due = models.DateTimeField()
 
+    def __str__(self):
+        return f"Contract for {self.client}"
+
 
 class EventStatus(models.Model):
     name = models.CharField(max_length=255)
