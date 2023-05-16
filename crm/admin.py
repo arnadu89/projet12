@@ -41,6 +41,12 @@ class UserAdmin(DjangoUserAdmin):
         ),
     )
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        obj.is_staff = bool(obj.team == User.Team.MANAGEMENT)
+        obj.save()
+
 
 class ClientAdmin(admin.ModelAdmin):
     list_display = [
