@@ -34,6 +34,23 @@ class Client(models.Model):
         return self.__repr__()
 
 
+class ClientManager(models.Manager):
+    @classmethod
+    def get_queryset(cls, user):
+        if user.team == User.Team.MANAGEMENT:
+            queryset = Contract.objects.all()
+        elif user.team == User.Team.SALES:
+            queryset = Client.objects.filter(
+                sales_contact=user
+            )
+        elif user.team == User.Team.SUPPORT:
+            queryset = Client.objects.filter(
+                event__support_contact=user
+            )
+
+        return queryset
+
+
 class Contract(models.Model):
     sales_contact = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -45,6 +62,19 @@ class Contract(models.Model):
 
     def __str__(self):
         return f"Contract for {self.client}"
+
+
+class ContractManager(models.Manager):
+    @classmethod
+    def get_queryset(cls, user):
+        if user.team == User.Team.MANAGEMENT:
+            queryset = Contract.objects.all()
+        elif user.team == User.Team.SALES:
+            queryset = Contract.objects.filter(
+                sales_contact=user
+            )
+
+        return queryset
 
 
 class EventStatus(models.Model):
@@ -63,3 +93,20 @@ class Event(models.Model):
     attendees = models.IntegerField()
     event_date = models.DateTimeField()
     notes = models.TextField(null=True)
+
+
+class EventManager(models.Manager):
+    @classmethod
+    def get_queryset(cls, user):
+        if user.team == User.Team.MANAGEMENT:
+            queryset = Event.objects.all()
+        elif user.team == User.Team.SALES:
+            queryset = Event.objects.filter(
+                client__sales_contact=user
+            )
+        elif user.team == User.Team.SUPPORT:
+            queryset = Event.objects.filter(
+                support_contact=user
+            )
+
+        return queryset
