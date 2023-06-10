@@ -25,7 +25,13 @@ router.register('client', views.ClientViewSet)
 router.register('contract', views.ContractViewSet)
 router.register('event', views.EventViewSet)
 
+
+def trigger_error(request):
+    div_by_0 = 1 / 0
+
+
 urlpatterns = [
+    path('sentry-debug', trigger_error),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),

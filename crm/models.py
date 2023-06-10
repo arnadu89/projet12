@@ -12,6 +12,48 @@ class User(AbstractUser):
         choices=Team.choices
     )
 
+    def get_clients(self):
+        queryset = Client.objects.none()
+        if self.team == User.Team.MANAGEMENT:
+            queryset = Client.objects.all()
+        elif self.team == User.Team.SALES:
+            queryset = Client.objects.filter(
+                sales_contact=self
+            )
+        elif self.team == User.Team.SUPPORT:
+            queryset = Client.objects.filter(
+                event__support_contact=self
+            )
+
+        return queryset
+
+    def get_contracts(self):
+        queryset = Contract.objects.none()
+        if self.team == User.Team.MANAGEMENT:
+            queryset = Contract.objects.all()
+        elif self.team == User.Team.SALES:
+            queryset = Contract.objects.filter(
+                sales_contact=self
+            )
+
+        return queryset
+
+    def get_events(self):
+        queryset = Event.objects.none()
+        if self.team == User.Team.MANAGEMENT:
+            queryset = Event.objects.all()
+        elif self.team == User.Team.SALES:
+            queryset = Event.objects.filter(
+                client__sales_contact=self
+            )
+        elif self.team == User.Team.SUPPORT:
+            queryset = Event.objects.filter(
+                support_contact=self
+            )
+
+        return queryset
+
+
 
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
@@ -38,7 +80,7 @@ class ClientManager(models.Manager):
     @classmethod
     def get_queryset(cls, user):
         if user.team == User.Team.MANAGEMENT:
-            queryset = Contract.objects.all()
+            queryset = Client.objects.all()
         elif user.team == User.Team.SALES:
             queryset = Client.objects.filter(
                 sales_contact=user

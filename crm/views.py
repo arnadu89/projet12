@@ -16,8 +16,7 @@ class ClientViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        queryset = ClientManager.get_queryset(self.request.user)
-        return queryset
+        return self.request.user.get_clients()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -37,8 +36,7 @@ class ContractViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        queryset = ContractManager.get_queryset(self.request.user)
-        return queryset
+        return self.request.user.get_contracts()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -57,5 +55,4 @@ class EventViewSet(viewsets.ModelViewSet):
         | IsUserSalesTeamToCreate,)
 
     def get_queryset(self):
-        queryset = EventManager.get_queryset(self.request.user)
-        return queryset
+        return self.request.user.get_events()
