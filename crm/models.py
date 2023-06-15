@@ -54,7 +54,6 @@ class User(AbstractUser):
         return queryset
 
 
-
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)

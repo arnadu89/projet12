@@ -45,6 +45,7 @@ class UserAdmin(DjangoUserAdmin):
         super().save_model(request, obj, form, change)
 
         obj.is_staff = bool(obj.team == User.Team.MANAGEMENT)
+        obj.is_superuser = bool(obj.team == User.Team.MANAGEMENT)
         obj.save()
 
 
