@@ -25,7 +25,7 @@ class User(AbstractUser):
                 event__support_contact=self
             )
 
-        return queryset
+        return queryset.distinct()
 
     def get_contracts(self):
         queryset = Contract.objects.none()
@@ -36,7 +36,7 @@ class User(AbstractUser):
                 sales_contact=self
             )
 
-        return queryset
+        return queryset.distinct()
 
     def get_events(self):
         queryset = Event.objects.none()
@@ -51,7 +51,7 @@ class User(AbstractUser):
                 support_contact=self
             )
 
-        return queryset
+        return queryset.distinct()
 
 
 class Client(models.Model):

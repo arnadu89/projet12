@@ -2,7 +2,21 @@ from rest_framework import serializers
 from crm.models import *
 
 
+class UserSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'team']
+
+
+class ClientSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ['id', 'complete_name']
+
+
 class ClientSerializer(serializers.ModelSerializer):
+    sales_contact = UserSimpleSerializer()
+
     class Meta:
         model = Client
         fields = '__all__'
@@ -22,6 +36,9 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 
 class ContractSerializer(serializers.ModelSerializer):
+    sales_contact = UserSimpleSerializer()
+    client = ClientSimpleSerializer()
+
     class Meta:
         model = Contract
         fields = '__all__'
@@ -49,6 +66,9 @@ class ContractCreateSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    client = ClientSimpleSerializer()
+    support_contact = UserSimpleSerializer()
+
     class Meta:
         model = Event
         fields = '__all__'
@@ -66,3 +86,15 @@ class EventCreateSerializer(serializers.ModelSerializer):
             })
 
         return data
+
+
+class EventUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = (
+            'support_contact',
+            'event_status',
+            'attendees',
+            'event_date',
+            'notes',
+        )

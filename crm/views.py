@@ -33,7 +33,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         return self.request.user.get_clients()
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.request.method in ['POST', 'PATCH']:
             return self.create_serializer_class
         return super().get_serializer_class()
 
@@ -94,9 +94,10 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     create_serializer_class = EventCreateSerializer
+    update_serializer_class = EventUpdateSerializer
     permission_classes = (
-        permissions.IsAdminUser | IsSupportAndEventIsNotFinishToUpdate
-        | IsUserSalesTeamToCreate,)
+        permissions.IsAdminUser | IsSupportAndEventIsNotFinishToReadUpdate
+        | IsUserSalesTeamToCreateUpdateDelete,)
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = EventFilter
@@ -107,6 +108,9 @@ class EventViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return self.create_serializer_class
+        elif self.request.method == 'PATCH':
+            return self.update_serializer_class
+
         return super().get_serializer_class()
 
     def get_serializer_context(self):
