@@ -20,16 +20,12 @@ Install dependencies :
 pip install -r requirements.txt
 ```
 
-Create postgresql database db_p12 and fill correct database settings in setting file.
-
-Then migrate :
+Import database from file :
 ```commandline
-
+sudo -u postgres pg_restore -c -F t -d db_p12 db_p12.tar
 ```
 
 Launch server :
 ```commandline
 python3 manage.py runserver
 ```
-
-Follow PostMan documentation to know how to use application :
